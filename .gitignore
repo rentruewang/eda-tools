@@ -1,0 +1,7 @@
+# Ignores binaries
+*
+!*.*
+!*/
+
+.vscode
+.DS_Store

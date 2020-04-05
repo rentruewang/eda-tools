@@ -20,7 +20,7 @@ inline void input(
 
     unordered_map<string, unordered_set<string>> net_map_set, cell_map_set;
 
-    ifstream file(name);
+    auto file = ifstream(name);
 
     file >> balance;
 
@@ -53,11 +53,11 @@ inline void input(
     assert(net_map.size() == 0);
     assert(cell_map.size() == 0);
 
-    for (auto iter(net_map_set.begin()); iter != net_map_set.end(); ++iter) {
+    for (auto iter = net_map_set.begin(); iter != net_map_set.end(); ++iter) {
         const unordered_set<string> &names = iter->second;
         net_map[iter->first] = vector<string>(names.begin(), names.end());
     }
-    for (auto iter(cell_map_set.begin()); iter != cell_map_set.end(); ++iter) {
+    for (auto iter = cell_map_set.begin(); iter != cell_map_set.end(); ++iter) {
         const unordered_set<string> &names = iter->second;
         cell_map[iter->first] = vector<string>(names.begin(), names.end());
     }
@@ -75,7 +75,6 @@ inline void transformation(
 
     unordered_map<string, unsigned> rev_net_names, rev_cell_names;
 
-    non_release_mode();
     assert(net_map.size() == 0 && cell_map.size() == 0);
     assert(net_names.size() == 0 && cell_names.size() == 0);
 
@@ -85,41 +84,41 @@ inline void transformation(
     net_names.reserve(old_net_map.size());
     cell_names.reserve(old_cell_map.size());
 
-    for (unsigned idx(0); idx < old_net_map.size(); ++idx) {
+    for (unsigned idx = 0; idx < old_net_map.size(); ++idx) {
         net_map.push_back(new Net());
     }
-    for (unsigned idx(0); idx < old_cell_map.size(); ++idx) {
+    for (unsigned idx = 0; idx < old_cell_map.size(); ++idx) {
         cell_map.push_back(new Cell());
     }
 
-    for (auto iter(old_net_map.begin()); iter != old_net_map.end(); ++iter) {
-        const string name(iter->first);
+    for (auto iter = old_net_map.begin(); iter != old_net_map.end(); ++iter) {
+        const string name = iter->first;
         if (rev_net_names.find(name) == rev_net_names.end()) {
             rev_net_names[name] = net_names.size();
             net_names.push_back(name);
         }
     }
 
-    for (auto iter(old_cell_map.begin()); iter != old_cell_map.end(); ++iter) {
-        const string name(iter->first);
+    for (auto iter = old_cell_map.begin(); iter != old_cell_map.end(); ++iter) {
+        const string name = iter->first;
         if (rev_cell_names.find(name) == rev_cell_names.end()) {
             rev_cell_names[name] = cell_names.size();
             cell_names.push_back(name);
         }
     }
 
-    for (auto iter(old_net_map.begin()); iter != old_net_map.end(); ++iter) {
-        const string nname(iter->first);
+    for (auto iter = old_net_map.begin(); iter != old_net_map.end(); ++iter) {
+        const string nname = iter->first;
         const vector<string> &cell_list = iter->second;
-        const unsigned net_id(rev_net_names[nname]);
+        const unsigned net_id = rev_net_names[nname];
 
         Net *net = net_map[net_id];
 
         assert(net_id < net_map.size());
 
-        for (unsigned idx(0); idx < cell_list.size(); ++idx) {
-            const string cname(cell_list[idx]);
-            const unsigned cell_id(rev_cell_names[cname]);
+        for (unsigned idx = 0; idx < cell_list.size(); ++idx) {
+            const string cname = cell_list[idx];
+            const unsigned cell_id = rev_cell_names[cname];
 
             assert(cell_id < cell_map.size());
 
@@ -132,13 +131,13 @@ inline void transformation(
 
     // Asserts
     assert(net_names.size() == rev_net_names.size());
-    for (unsigned idx(0); idx < net_names.size(); ++idx) {
-        const string name(net_names[idx]);
+    for (unsigned idx = 0; idx < net_names.size(); ++idx) {
+        const string name = net_names[idx];
         assert(rev_net_names[name] == idx);
     }
     assert(cell_names.size() == rev_cell_names.size());
-    for (unsigned idx(0); idx < cell_names.size(); ++idx) {
-        const string name(cell_names[idx]);
+    for (unsigned idx = 0; idx < cell_names.size(); ++idx) {
+        const string name = cell_names[idx];
         assert(rev_cell_names[name] == idx);
     }
 }
@@ -149,13 +148,11 @@ inline void output(const char *name, const std::vector<Net *> &net_map,
                    const std::vector<std::string> &cell_names) {
     using namespace std;
 
-    non_release_mode();
-
     stringstream ss;
-    ofstream file(name);
+    auto file = ofstream(name);
 
-    unsigned cut_size(0);
-    for (unsigned idx(0); idx < net_map.size(); ++idx) {
+    unsigned cut_size = 0;
+    for (unsigned idx = 0; idx < net_map.size(); ++idx) {
         const Net *net = net_map[idx];
         if (net->trueCount() && net->falseCount()) ++cut_size;
     }
@@ -164,13 +161,13 @@ inline void output(const char *name, const std::vector<Net *> &net_map,
     file << ss.str();
 
     stringstream true_ss, false_ss;
-    unsigned true_count(0), false_count(0);
+    unsigned true_count = 0, false_count = 0;
 
     true_ss << "\n";
     false_ss << "\n";
 
-    for (unsigned idx(0); idx < cell_map.size(); ++idx) {
-        const string name(cell_names[idx]);
+    for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
+        const string name = cell_names[idx];
         const Cell *cell = cell_map[idx];
         if (cell->getSide()) {
             ++true_count;

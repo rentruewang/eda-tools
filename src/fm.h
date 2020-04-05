@@ -27,17 +27,15 @@ inline bool meta_data(unsigned num_iter, int result) {
 #ifndef SILENT
     printf("On iteration = %03d, gain = %06d\n", num_iter, result);
 #endif
-    return num_iter < 100 && result > 0;
+    return result > 0;
 }
 
 inline void modify_gain(std::vector<Net *> &net_map,
                         std::vector<Cell *> &cell_map,
                         std::unordered_map<unsigned, Record> &records,
                         const unsigned name, const bool increase) {
-    non_release_mode();
-
     Cell *cell = cell_map[name];
-    int old_gain(cell->getGain());
+    int old_gain = cell->getGain();
     int new_gain;
     if (increase == INC) {
         new_gain = old_gain + 1;
@@ -62,28 +60,26 @@ inline int flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
                      std::unordered_map<unsigned, Record> &records) {
     using namespace std;
 
-    non_release_mode();
-
     assert(records.size() == 0);
 
-    int cutsize_reduction(0);
+    int cutsize_reduction = 0;
 
     const vector<unsigned> &nets = cell->getNets();
-    const bool fromSide(cell->getSide());
+    const bool fromSide = cell->getSide();
 
-    for (unsigned idx(0); idx < nets.size(); ++idx) {
-        const unsigned net_name(nets[idx]);
+    for (unsigned idx = 0; idx < nets.size(); ++idx) {
+        const unsigned net_name = nets[idx];
         Net *net = net_map[net_name];
         const vector<unsigned> &cells = net->getCells();
 
-        const unsigned toCount(net->countOn(!fromSide));
+        const unsigned toCount = net->countOn(!fromSide);
 
         unsigned jdx, cnt;
         switch (toCount) {
             case 0:
                 --cutsize_reduction;
                 for (jdx = 0; jdx < cells.size(); ++jdx) {
-                    const unsigned other_name(cells[jdx]);
+                    const unsigned other_name = cells[jdx];
                     modify_gain(net_map, cell_map, records, other_name, INC);
                 }
                 modify_gain(net_map, cell_map, records, cell_name, INC);
@@ -91,7 +87,7 @@ inline int flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
                 break;
             case 1:
                 for (jdx = cnt = 0; jdx < cells.size(); ++jdx) {
-                    const unsigned other_name(cells[jdx]);
+                    const unsigned other_name = cells[jdx];
                     Cell *other_end = cell_map[cells[jdx]];
                     if (other_end->getSide() != fromSide) {
                         modify_gain(net_map, cell_map, records, other_name,
@@ -108,20 +104,20 @@ inline int flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
         assert(cell->getSide() != fromSide && "Cell should be flipped here");
 
         net->decCountOn(fromSide);
-        const unsigned fromCount(net->countOn(fromSide));
+        const unsigned fromCount = net->countOn(fromSide);
 
         switch (fromCount) {
             case 0:
                 ++cutsize_reduction;
                 for (jdx = 0; jdx < cells.size(); ++jdx) {
-                    const unsigned other_name(cells[jdx]);
+                    const unsigned other_name = cells[jdx];
                     modify_gain(net_map, cell_map, records, other_name, DEC);
                 }
                 modify_gain(net_map, cell_map, records, cell_name, DEC);
                 break;
             case 1:
                 for (jdx = cnt = 0; jdx < cells.size(); ++jdx) {
-                    const unsigned other_name(cells[jdx]);
+                    const unsigned other_name = cells[jdx];
                     Cell *other_end = cell_map[cells[jdx]];
                     if (other_end->getSide() == fromSide) {
                         modify_gain(net_map, cell_map, records, other_name,
@@ -151,14 +147,12 @@ inline int wrap_flip_cell(std::vector<Net *> &net_map,
                           const unsigned cell_name, Cell *cell) {
     using namespace std;
 
-    non_release_mode();
-
     unordered_map<unsigned, Record> records;
-    int gain(flip_cell(net_map, cell_map, cell_name, cell, records));
+    int gain = flip_cell(net_map, cell_map, cell_name, cell, records);
 
-    for (auto iter(records.begin()); iter != records.end(); ++iter) {
-        const unsigned name(iter->first);
-        const Record record(iter->second);
+    for (auto iter = records.begin(); iter != records.end(); ++iter) {
+        const unsigned name = iter->first;
+        const auto record = Record(iter->second);
         if (seen.find(name) == seen.end()) {
             assert(!next_bucket.contains(name));
             bucket.update(record.before, record.after, name);
@@ -177,27 +171,25 @@ inline int fm_once(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
                    unsigned &partition) {
     using namespace std;
 
-    non_release_mode();
-
     unordered_set<unsigned> seen;
     Bucket next_bucket;
     vector<unsigned> history;
     unsigned max_idx, count;
-    int max_gain, acc_gain, single_gain, max_single_gain(1);
+    int max_gain, acc_gain, single_gain, max_single_gain = 1;
 
-    const unsigned SIZE(cell_map.size());
+    const unsigned SIZE = cell_map.size();
     assert(bucket.size() == SIZE);
     assert(next_bucket.size() == 0);
 
     for (count = max_idx = 0, max_gain = acc_gain = 0; count < SIZE; ++count) {
-        const unsigned current_cell_name(bucket.pop());
+        const unsigned current_cell_name = bucket.pop();
         Cell *cell = cell_map[current_cell_name];
 
         assert(seen.find(current_cell_name) == seen.end());
         seen.insert(current_cell_name);
         next_bucket.push(current_cell_name, cell);
 
-        unsigned next_partition =
+        const unsigned next_partition =
             cell->getSide() ? partition - 1 : partition + 1;
 
         if (condition(next_partition)) {
@@ -222,18 +214,13 @@ inline int fm_once(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
         }
     }
 
-    int total_gain(acc_gain);
+    int total_gain = acc_gain;
 
     for (count = max_idx; count < history.size(); ++count) {
-        unsigned next_partition;
-        const unsigned current_cell_name(history[count]);
+        const unsigned current_cell_name = history[count];
         Cell *cell = cell_map[current_cell_name];
-        if (cell->getSide()) {
-            next_partition = partition - 1;
-        } else {
-            next_partition = partition + 1;
-        }
-        partition = next_partition;
+
+        partition = cell->getSide() ? partition - 1 : partition + 1;
 
         assert(seen.find(current_cell_name) != seen.end());
         single_gain = wrap_flip_cell(net_map, cell_map, bucket, next_bucket,
@@ -244,10 +231,12 @@ inline int fm_once(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
 
     assert(bucket.size() == 0);
     assert(next_bucket.size() == SIZE);
+
     bucket = move(next_bucket);
+
     assert(max_gain == total_gain && "Rewind is incorrect");
 
-    for (auto iter(bucket.getBucket().begin());
+    for (auto iter = bucket.getBucket().begin();
          iter != bucket.getBucket().end(); ++iter) {
         assert(iter->second.size() != 0);
     }
@@ -260,26 +249,26 @@ inline int fm_once(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
 
 void fm(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
         const unsigned tolerate, unsigned &part) {
-    const unsigned SIZE(cell_map.size());
-    const unsigned MIDDLE(SIZE >> 1);
-    const unsigned LOWER(MIDDLE - tolerate), UPPER(MIDDLE + tolerate);
+    const unsigned SIZE = cell_map.size();
+    const unsigned MIDDLE = SIZE >> 1;
+    const unsigned LOWER = MIDDLE - tolerate, UPPER = MIDDLE + tolerate;
     Bucket bucket(cell_map);
 
 #ifndef SILENT
     printf("between (%d, %d)\n", LOWER, UPPER);
 #endif
 
-    for (unsigned iter(0); meta_data(iter, fm_once(
-                                               net_map, cell_map, bucket,
-                                               [=](const unsigned size) {
-                                                   return size > LOWER &&
-                                                          size < UPPER;
-                                               },
-                                               part));
+    for (unsigned iter = 0; meta_data(iter, fm_once(
+                                                net_map, cell_map, bucket,
+                                                [=](const unsigned size) {
+                                                    return size > LOWER &&
+                                                           size < UPPER;
+                                                },
+                                                part));
          ++iter)
         ;
 
-    unsigned index(0), count_true(0);
+    unsigned index = 0, count_true = 0;
     for (index = count_true = 0; index < cell_map.size(); ++index) {
         count_true += cell_map[index]->getSide();
     }
