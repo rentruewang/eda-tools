@@ -1,5 +1,4 @@
-#ifndef NETS_H
-#define NETS_H
+#pragma once
 
 #include <vector>
 
@@ -8,33 +7,17 @@ class Net {
     std::vector<unsigned> cells;
 
    public:
-    Net() : on_true_side(0), cells(std::vector<unsigned>()) {}
+    Net();
 
-    void setCount(unsigned u) { on_true_side = u; }
+    void setCount(unsigned u);
 
-    unsigned trueCount() const { return on_true_side; }
-    unsigned falseCount() const { return cells.size() - on_true_side; }
-    unsigned countOn(bool side) const {
-        if (side) {
-            return trueCount();
-        } else {
-            return falseCount();
-        }
-    }
-    void incCountOn(bool side) {
-        if (side) {
-            ++on_true_side;
-        } else {
-            --on_true_side;
-        }
-    }
-    void decCountOn(bool side) { incCountOn(!side); }
+    unsigned trueCount() const;
+    unsigned falseCount() const;
+    unsigned countOn(bool side) const;
+    void incCountOn(bool side);
+    void decCountOn(bool side);
 
-    void pushCell(unsigned cell) { cells.push_back(cell); }
-
-    const std::vector<unsigned> &getCells() const { return cells; }
-
-    unsigned size() const { return cells.size(); }
+    void pushCell(unsigned cell);
+    const std::vector<unsigned> &getCells() const;
+    unsigned size() const;
 };
-
-#endif

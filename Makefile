@@ -1,24 +1,15 @@
-CC = g++
-CC_FLAGS = -O3
-CC_STANDARD = -std=c++11
-BINARY = fm
-FILES = src/main.cpp
+CXX = g++
+CXXFLAGS = -O3 -std=c++11
+TARGETS = main.o buckets.o nets.o cells.o assertions.o init.o fm.o
+FLAGS = 
 
+.PHONY: all clean
 
-.PHONY: all release_silent release debug debug_fast
-all: release_silent
+all: $(TARGETS)
+	$(CXX) $(CXXFLAGS) $? -o $@ $(FLAGS)
 
-release:
-	$(CC) $(CC_FLAGS) -Wall $(CC_STANDARD) $(FILES) -o $(BINARY) -DNDEBUG
-
-release_silent:
-	$(CC) $(CC_FLAGS) -Wall $(CC_STANDARD) $(FILES) -o $(BINARY) -DNDEBUG -DSILENT
-	
-debug:
-	$(CC) -g -rdynamic -Wall $(CC_STANDARD) $(FILES) -o $(BINARY)
-
-debug_fast:
-	$(CC) -O3 -Wall $(CC_STANDARD) $(FILES) -o $(BINARY)
+%.o: src/%.cpp
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f $(BINARY)
+	rm -f $(BINARY) $(TARGETS)

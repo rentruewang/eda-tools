@@ -1,5 +1,4 @@
-#ifndef IO_H
-#define IO_H
+#pragma once
 
 #include <fstream>
 #include <sstream>
@@ -12,7 +11,7 @@
 #include "cells.h"
 #include "nets.h"
 
-inline void input(
+void input(
     const char *name, double &balance,
     std::unordered_map<std::string, std::vector<std::string>> &net_map,
     std::unordered_map<std::string, std::vector<std::string>> &cell_map) {
@@ -66,7 +65,7 @@ inline void input(
     assert(cell_map.size() == cell_map_set.size());
 }
 
-inline void transformation(
+void transformation(
     std::unordered_map<std::string, std::vector<std::string>> &old_net_map,
     std::unordered_map<std::string, std::vector<std::string>> &old_cell_map,
     std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
@@ -142,10 +141,10 @@ inline void transformation(
     }
 }
 
-inline void output(const char *name, const std::vector<Net *> &net_map,
-                   const std::vector<Cell *> &cell_map,
-                   const std::vector<std::string> &net_names,
-                   const std::vector<std::string> &cell_names) {
+void output(const char *name, const std::vector<Net *> &net_map,
+            const std::vector<Cell *> &cell_map,
+            const std::vector<std::string> &net_names,
+            const std::vector<std::string> &cell_names) {
     using namespace std;
 
     stringstream ss;
@@ -186,5 +185,3 @@ inline void output(const char *name, const std::vector<Net *> &net_map,
     file << "G1 " << true_count << true_ss.str();
     file << "G2 " << false_count << false_ss.str();
 }
-
-#endif
