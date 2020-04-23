@@ -1,5 +1,9 @@
 #include "init.h"
 
+#include <algorithm>
+#include <set>
+#include <utility>
+
 unsigned naive_init_side(std::vector<Cell *> &cell_map) {
     const unsigned SIZE = cell_map.size();
     const unsigned HALF = SIZE >> 1;

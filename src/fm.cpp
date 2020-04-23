@@ -1,5 +1,7 @@
 #include "fm.h"
 
+#include <iostream>
+
 Record::Record() : before(0), after(0) {}
 
 Record::Record(int b, int a) : before(b), after(a) {}
