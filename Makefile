@@ -1,14 +1,15 @@
 CXX = g++
 CXXFLAGS = -O3 -std=c++11
 TARGETS = assertions.o buckets.o cells.o fm.o init.o io.o main.o nets.o
+BINARY = fm
 FLAGS = 
 
 .PHONY: all clean
 
-all: fm
+all: $(BINARY)
 
-fm: $(TARGETS)
-	$(CXX) $(CXXFLAGS) $? -o $@ $(FLAGS)
+$(BINARY): $(TARGETS)
+	$(CXX) $(CXXFLAGS) $? -o $(BINARY) $(FLAGS)
 
 %.o: src/%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@
