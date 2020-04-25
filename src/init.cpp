@@ -4,7 +4,9 @@
 #include <set>
 #include <utility>
 
-unsigned naive_init_side(std::vector<Cell *> &cell_map) {
+using namespace std;
+
+unsigned naive_init_side(vector<Cell *> &cell_map) {
     const unsigned SIZE = cell_map.size();
     const unsigned HALF = SIZE >> 1;
     for (unsigned idx = 0, cnt = 0; idx < cell_map.size(); ++idx, ++cnt) {
@@ -13,8 +15,8 @@ unsigned naive_init_side(std::vector<Cell *> &cell_map) {
     return HALF;
 }
 
-unsigned sophisticated_init_side(std::vector<Net *> &net_map,
-                                 std::vector<Cell *> &cell_map,
+unsigned sophisticated_init_side(vector<Net *> &net_map,
+                                 vector<Cell *> &cell_map,
                                  const unsigned too_much) {
     using namespace std;
 
@@ -118,7 +120,7 @@ unsigned sophisticated_init_side(std::vector<Net *> &net_map,
     return count_true;
 }
 
-unsigned init_side(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
+unsigned init_side(vector<Net *> &net_map, vector<Cell *> &cell_map,
                    const unsigned too_much, const bool sophisticated) {
     if (sophisticated) {
         return sophisticated_init_side(net_map, cell_map, too_much);
@@ -127,7 +129,7 @@ unsigned init_side(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
     }
 }
 
-void gains(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
+void gains(vector<Net *> &net_map, vector<Cell *> &cell_map,
            const bool checking) {
     using namespace std;
 
@@ -198,10 +200,10 @@ void gains(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
     }
 }
 
-void init_gains(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map) {
+void init_gains(vector<Net *> &net_map, vector<Cell *> &cell_map) {
     gains(net_map, cell_map, false);
 }
 
-void assert_gains(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map) {
+void assert_gains(vector<Net *> &net_map, vector<Cell *> &cell_map) {
     gains(net_map, cell_map, true);
 }

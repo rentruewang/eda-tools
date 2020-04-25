@@ -1,6 +1,8 @@
 #include "nets.h"
 
-Net::Net() : on_true_side(0), cells(std::vector<unsigned>()) {}
+using namespace std;
+
+Net::Net() : on_true_side(0), cells(vector<unsigned>()) {}
 
 void Net::setCount(unsigned u) { on_true_side = u; }
 
@@ -28,6 +30,6 @@ void Net::decCountOn(bool side) { incCountOn(!side); }
 
 void Net::pushCell(unsigned cell) { cells.push_back(cell); }
 
-const std::vector<unsigned> &Net::getCells() const { return cells; }
+const vector<unsigned> &Net::getCells() const { return cells; }
 
 unsigned Net::size() const { return cells.size(); }

@@ -1,6 +1,8 @@
 #include "cells.h"
 
-Cell::Cell() : side(0), gain(0), nets(std::vector<unsigned>()) {}
+using namespace std;
+
+Cell::Cell() : side(0), gain(0), nets(vector<unsigned>()) {}
 
 void Cell::flip() { side = !side; }
 
@@ -18,6 +20,6 @@ void Cell::decGain() { --gain; }
 
 void Cell::pushNet(unsigned net) { nets.push_back(net); }
 
-const std::vector<unsigned> &Cell::getNets() const { return nets; }
+const vector<unsigned> &Cell::getNets() const { return nets; }
 
 unsigned Cell::size() const { return nets.size(); }

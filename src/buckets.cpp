@@ -1,8 +1,10 @@
 #include "buckets.h"
 
-List::List() : cells(std::unordered_set<unsigned>()) {}
+using namespace std;
 
-const std::unordered_set<unsigned> &List::getList() const { return cells; }
+List::List() : cells(unordered_set<unsigned>()) {}
+
+const unordered_set<unsigned> &List::getList() const { return cells; }
 
 unsigned List::size() const { return cells.size(); }
 
@@ -27,14 +29,14 @@ bool List::contains(const unsigned name) const {
 
 void List::erase(const unsigned name) { cells.erase(name); }
 
-Bucket::Bucket() : bucket(std::map<int, List>()) {}
+Bucket::Bucket() : bucket(map<int, List>()) {}
 
-Bucket::Bucket(const std::vector<Cell *> &cell_map)
-    : bucket(std::map<int, List>()) {
+Bucket::Bucket(const vector<Cell *> &cell_map)
+    : bucket(map<int, List>()) {
     fill(cell_map);
 }
 
-const std::map<int, List> &Bucket::getBucket() const { return bucket; }
+const map<int, List> &Bucket::getBucket() const { return bucket; }
 
 void Bucket::push(const unsigned name, const Cell *cell) {
     int gain = cell->getGain();
@@ -84,7 +86,7 @@ void Bucket::update(int old_gain, int new_gain, unsigned name) {
     new_list.push(name);
 }
 
-void Bucket::fill(const std::vector<Cell *> &cell_map) {
+void Bucket::fill(const vector<Cell *> &cell_map) {
     for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
         push(idx, cell_map[idx]);
     }
@@ -92,11 +94,11 @@ void Bucket::fill(const std::vector<Cell *> &cell_map) {
 }
 
 Bucket &Bucket::operator=(Bucket &&b) {
-    bucket = std::move(b.bucket);
+    bucket = move(b.bucket);
     return *this;
 }
 
-void Bucket::empty(Bucket &other, std::unordered_set<unsigned> &seen) {
+void Bucket::empty(Bucket &other, unordered_set<unsigned> &seen) {
     for (auto iter = other.bucket.begin(); iter != other.bucket.end(); ++iter) {
         const unsigned gain = iter->first;
         List &list = iter->second;

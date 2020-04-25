@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 Record::Record() : before(0), after(0) {}
 
 Record::Record(int b, int a) : before(b), after(a) {}
@@ -16,9 +18,9 @@ bool meta_data(unsigned num_iter, int result) {
 constexpr bool INC = true;
 constexpr bool DEC = false;
 
-void modify_gain(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
-                 std::unordered_map<unsigned, Record> &records,
-                 const unsigned name, const bool increase) {
+void modify_gain(vector<Net *> &net_map, vector<Cell *> &cell_map,
+                 unordered_map<unsigned, Record> &records, const unsigned name,
+                 const bool increase) {
     Cell *cell = cell_map[name];
     int old_gain = cell->getGain();
     int new_gain;
@@ -40,9 +42,9 @@ void modify_gain(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
     }
 }
 
-int flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
+int flip_cell(vector<Net *> &net_map, vector<Cell *> &cell_map,
               const unsigned cell_name, Cell *cell,
-              std::unordered_map<unsigned, Record> &records) {
+              unordered_map<unsigned, Record> &records) {
     using namespace std;
 
     assert(records.size() == 0);
@@ -125,9 +127,9 @@ int flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
     return cutsize_reduction;
 }
 
-int wrap_flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
+int wrap_flip_cell(vector<Net *> &net_map, vector<Cell *> &cell_map,
                    Bucket &bucket, Bucket &next_bucket,
-                   const std::unordered_set<unsigned> &seen,
+                   const unordered_set<unsigned> &seen,
                    const unsigned cell_name, Cell *cell) {
     using namespace std;
 
@@ -149,9 +151,8 @@ int wrap_flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
     return gain;
 }
 
-int fm_once(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
-            Bucket &bucket, std::function<bool(const unsigned)> condition,
-            unsigned &partition) {
+int fm_once(vector<Net *> &net_map, vector<Cell *> &cell_map, Bucket &bucket,
+            function<bool(const unsigned)> condition, unsigned &partition) {
     using namespace std;
 
     unordered_set<unsigned> seen;
@@ -230,7 +231,7 @@ int fm_once(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
     return max_gain;
 }
 
-void fm(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
+void fm(vector<Net *> &net_map, vector<Cell *> &cell_map,
         const unsigned tolerate, unsigned &part) {
     const unsigned SIZE = cell_map.size();
     const unsigned MIDDLE = SIZE >> 1;

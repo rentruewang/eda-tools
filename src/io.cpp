@@ -5,10 +5,11 @@
 #include <sstream>
 #include <unordered_set>
 
-void input(
-    const char *name, double &balance,
-    std::unordered_map<std::string, std::vector<std::string>> &net_map,
-    std::unordered_map<std::string, std::vector<std::string>> &cell_map) {
+using namespace std;
+
+void input(const char *name, double &balance,
+           unordered_map<string, vector<string>> &net_map,
+           unordered_map<string, vector<string>> &cell_map) {
     using namespace std;
 
     unordered_map<string, unordered_set<string>> net_map_set, cell_map_set;
@@ -59,11 +60,10 @@ void input(
     assert(cell_map.size() == cell_map_set.size());
 }
 
-void transformation(
-    std::unordered_map<std::string, std::vector<std::string>> &old_net_map,
-    std::unordered_map<std::string, std::vector<std::string>> &old_cell_map,
-    std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
-    std::vector<std::string> &net_names, std::vector<std::string> &cell_names) {
+void transformation(unordered_map<string, vector<string>> &old_net_map,
+                    unordered_map<string, vector<string>> &old_cell_map,
+                    vector<Net *> &net_map, vector<Cell *> &cell_map,
+                    vector<string> &net_names, vector<string> &cell_names) {
     using namespace std;
 
     unordered_map<string, unsigned> rev_net_names, rev_cell_names;
@@ -135,10 +135,9 @@ void transformation(
     }
 }
 
-void output(const char *name, const std::vector<Net *> &net_map,
-            const std::vector<Cell *> &cell_map,
-            const std::vector<std::string> &net_names,
-            const std::vector<std::string> &cell_names) {
+void output(const char *name, const vector<Net *> &net_map,
+            const vector<Cell *> &cell_map, const vector<string> &net_names,
+            const vector<string> &cell_names) {
     using namespace std;
 
     stringstream ss;
