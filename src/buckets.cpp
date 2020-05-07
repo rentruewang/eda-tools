@@ -31,8 +31,7 @@ void List::erase(const unsigned name) { cells.erase(name); }
 
 Bucket::Bucket() : bucket(map<int, List>()) {}
 
-Bucket::Bucket(const vector<Cell *> &cell_map)
-    : bucket(map<int, List>()) {
+Bucket::Bucket(const vector<Cell *> &cell_map) : bucket(map<int, List>()) {
     fill(cell_map);
 }
 

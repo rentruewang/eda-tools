@@ -1,12 +1,9 @@
 #include "fm.h"
 
 #include <iostream>
+#include <utility>
 
 using namespace std;
-
-Record::Record() : before(0), after(0) {}
-
-Record::Record(int b, int a) : before(b), after(a) {}
 
 bool meta_data(unsigned num_iter, int result) {
 #ifndef SILENT
@@ -19,8 +16,8 @@ constexpr bool INC = true;
 constexpr bool DEC = false;
 
 void modify_gain(vector<Net *> &net_map, vector<Cell *> &cell_map,
-                 unordered_map<unsigned, Record> &records, const unsigned name,
-                 const bool increase) {
+                 unordered_map<unsigned, pair<int, int>> &records,
+                 const unsigned name, const bool increase) {
     Cell *cell = cell_map[name];
     int old_gain = cell->getGain();
     int new_gain;
@@ -34,19 +31,17 @@ void modify_gain(vector<Net *> &net_map, vector<Cell *> &cell_map,
     }
     assert(new_gain == cell->getGain());
     if (records.find(name) == records.end()) {
-        records[name] = Record(old_gain, new_gain);
+        records[name] = pair<int, int>(old_gain, new_gain);
     } else {
-        Record &record = records[name];
-        assert(old_gain == record.after);
-        record.after = new_gain;
+        pair<int, int> &record = records[name];
+        assert(old_gain == record.second);
+        record.second = new_gain;
     }
 }
 
 int flip_cell(vector<Net *> &net_map, vector<Cell *> &cell_map,
               const unsigned cell_name, Cell *cell,
-              unordered_map<unsigned, Record> &records) {
-    using namespace std;
-
+              unordered_map<unsigned, pair<int, int>> &records) {
     assert(records.size() == 0);
 
     int cutsize_reduction = 0;
@@ -70,7 +65,7 @@ int flip_cell(vector<Net *> &net_map, vector<Cell *> &cell_map,
                     modify_gain(net_map, cell_map, records, other_name, INC);
                 }
                 modify_gain(net_map, cell_map, records, cell_name, INC);
-                assert(records[cell_name].after == cell->getGain());
+                assert(records[cell_name].second == cell->getGain());
                 break;
             case 1:
                 for (jdx = cnt = 0; jdx < cells.size(); ++jdx) {
@@ -131,20 +126,18 @@ int wrap_flip_cell(vector<Net *> &net_map, vector<Cell *> &cell_map,
                    Bucket &bucket, Bucket &next_bucket,
                    const unordered_set<unsigned> &seen,
                    const unsigned cell_name, Cell *cell) {
-    using namespace std;
-
-    unordered_map<unsigned, Record> records;
+    unordered_map<unsigned, pair<int, int>> records;
     int gain = flip_cell(net_map, cell_map, cell_name, cell, records);
 
     for (auto iter = records.begin(); iter != records.end(); ++iter) {
         const unsigned name = iter->first;
-        const auto record = Record(iter->second);
+        const pair<int, int> &record = iter->second;
         if (seen.find(name) == seen.end()) {
             assert(!next_bucket.contains(name));
-            bucket.update(record.before, record.after, name);
+            bucket.update(record.first, record.second, name);
         } else {
             assert(!bucket.contains(name));
-            next_bucket.update(record.before, record.after, name);
+            next_bucket.update(record.first, record.second, name);
         }
     }
 
@@ -153,8 +146,6 @@ int wrap_flip_cell(vector<Net *> &net_map, vector<Cell *> &cell_map,
 
 int fm_once(vector<Net *> &net_map, vector<Cell *> &cell_map, Bucket &bucket,
             function<bool(const unsigned)> condition, unsigned &partition) {
-    using namespace std;
-
     unordered_set<unsigned> seen;
     Bucket next_bucket;
     vector<unsigned> history;

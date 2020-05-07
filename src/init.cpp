@@ -18,8 +18,6 @@ unsigned naive_init_side(vector<Cell *> &cell_map) {
 unsigned sophisticated_init_side(vector<Net *> &net_map,
                                  vector<Cell *> &cell_map,
                                  const unsigned too_much) {
-    using namespace std;
-
     const unsigned net_size = net_map.size();
     set<unsigned> cell_inited;
 
@@ -131,8 +129,6 @@ unsigned init_side(vector<Net *> &net_map, vector<Cell *> &cell_map,
 
 void gains(vector<Net *> &net_map, vector<Cell *> &cell_map,
            const bool checking) {
-    using namespace std;
-
     if (checking) {
 #ifdef NDEBUG
         return;

@@ -10,8 +10,6 @@ using namespace std;
 void input(const char *name, double &balance,
            unordered_map<string, vector<string>> &net_map,
            unordered_map<string, vector<string>> &cell_map) {
-    using namespace std;
-
     unordered_map<string, unordered_set<string>> net_map_set, cell_map_set;
 
     auto file = ifstream(name);
@@ -64,8 +62,6 @@ void transformation(unordered_map<string, vector<string>> &old_net_map,
                     unordered_map<string, vector<string>> &old_cell_map,
                     vector<Net *> &net_map, vector<Cell *> &cell_map,
                     vector<string> &net_names, vector<string> &cell_names) {
-    using namespace std;
-
     unordered_map<string, unsigned> rev_net_names, rev_cell_names;
 
     assert(net_map.size() == 0 && cell_map.size() == 0);
@@ -138,8 +134,6 @@ void transformation(unordered_map<string, vector<string>> &old_net_map,
 void output(const char *name, const vector<Net *> &net_map,
             const vector<Cell *> &cell_map, const vector<string> &net_names,
             const vector<string> &cell_names) {
-    using namespace std;
-
     stringstream ss;
     auto file = ofstream(name);
 

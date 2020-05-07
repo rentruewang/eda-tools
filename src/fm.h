@@ -3,6 +3,7 @@
 #include <functional>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 #include "assertions.h"
@@ -10,22 +11,15 @@
 #include "cells.h"
 #include "nets.h"
 
-struct Record {
-    int before;
-    int after;
-    Record();
-    Record(int b, int a);
-};
-
 bool meta_data(unsigned num_iter, int result);
 
 void modify_gain(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
-                 std::unordered_map<unsigned, Record> &records,
+                 std::unordered_map<unsigned, std::pair<int, int>> &records,
                  const unsigned name, const bool increase);
 
 int flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
               const unsigned cell_name, Cell *cell,
-              std::unordered_map<unsigned, Record> &records);
+              std::unordered_map<unsigned, std::pair<int, int>> &records);
 
 int wrap_flip_cell(std::vector<Net *> &net_map, std::vector<Cell *> &cell_map,
                    Bucket &bucket, Bucket &next_bucket,
