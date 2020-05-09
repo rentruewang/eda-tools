@@ -9,14 +9,14 @@
 #include "io.h"
 #include "nets.h"
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const* argv[]) {
     using namespace std;
 
     non_release_mode();
 
     double balance;
-    vector<Net *> net_map;
-    vector<Cell *> cell_map;
+    vector<Net*> net_map;
+    vector<Cell*> cell_map;
     vector<string> net_names, cell_names;
     unordered_map<string, vector<string>> tmp_net_map, tmp_cell_map;
 

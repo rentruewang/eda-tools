@@ -6,7 +6,7 @@
 
 using namespace std;
 
-unsigned naive_init_side(vector<Cell *> &cell_map) {
+unsigned naive_init_side(vector<Cell*>& cell_map) {
     const unsigned SIZE = cell_map.size();
     const unsigned HALF = SIZE >> 1;
     for (unsigned idx = 0, cnt = 0; idx < cell_map.size(); ++idx, ++cnt) {
@@ -15,20 +15,20 @@ unsigned naive_init_side(vector<Cell *> &cell_map) {
     return HALF;
 }
 
-unsigned sophisticated_init_side(vector<Net *> &net_map,
-                                 vector<Cell *> &cell_map,
+unsigned sophisticated_init_side(vector<Net*>& net_map,
+                                 vector<Cell*>& cell_map,
                                  const unsigned too_much) {
     const unsigned net_size = net_map.size();
     set<unsigned> cell_inited;
 
-    auto net_list = vector<Net *>(net_map.begin(), net_map.end());
+    auto net_list = vector<Net*>(net_map.begin(), net_map.end());
     sort(net_list.begin(), net_list.end(),
-         [](const Net *n1, const Net *n2) { return n1->size() < n2->size(); });
+         [](const Net* n1, const Net* n2) { return n1->size() < n2->size(); });
 
     unsigned net_idx, count_true, count_false;
     for (net_idx = count_true = count_false = 0; net_idx < net_size;
          ++net_idx) {
-        const vector<unsigned> &associated = net_list[net_idx]->getCells();
+        const vector<unsigned>& associated = net_list[net_idx]->getCells();
 
         unsigned cell_idx, confirmed_true, confirmed_false, unconfirmed;
         for (cell_idx = confirmed_true = confirmed_false = unconfirmed = 0;
@@ -37,7 +37,7 @@ unsigned sophisticated_init_side(vector<Net *> &net_map,
             if (cell_inited.find(name) == cell_inited.end()) {
                 ++unconfirmed;
             } else {
-                const Cell *cell = cell_map[name];
+                const Cell* cell = cell_map[name];
                 if (cell->getSide()) {
                     ++confirmed_true;
                 } else {
@@ -56,7 +56,7 @@ unsigned sophisticated_init_side(vector<Net *> &net_map,
                 const unsigned name = associated[cell_idx];
                 if (cell_inited.find(name) == cell_inited.end()) {
                     cell_inited.insert(name);
-                    Cell *cell = cell_map[name];
+                    Cell* cell = cell_map[name];
                     cell->setSide(true);
                     ++count_true;
                 }
@@ -66,7 +66,7 @@ unsigned sophisticated_init_side(vector<Net *> &net_map,
                 const unsigned name = associated[cell_idx];
                 if (cell_inited.find(name) == cell_inited.end()) {
                     cell_inited.insert(name);
-                    Cell *cell = cell_map[name];
+                    Cell* cell = cell_map[name];
                     cell->setSide(false);
                     ++count_false;
                 }
@@ -80,7 +80,7 @@ unsigned sophisticated_init_side(vector<Net *> &net_map,
                     const unsigned name = associated[cell_idx];
                     if (cell_inited.find(name) == cell_inited.end()) {
                         cell_inited.insert(name);
-                        Cell *cell = cell_map[name];
+                        Cell* cell = cell_map[name];
                         cell->setSide(false);
                         ++count_false;
                     }
@@ -92,7 +92,7 @@ unsigned sophisticated_init_side(vector<Net *> &net_map,
                     const unsigned name = associated[cell_idx];
                     if (cell_inited.find(name) == cell_inited.end()) {
                         cell_inited.insert(name);
-                        Cell *cell = cell_map[name];
+                        Cell* cell = cell_map[name];
                         cell->setSide(true);
                         ++count_true;
                     }
@@ -118,8 +118,10 @@ unsigned sophisticated_init_side(vector<Net *> &net_map,
     return count_true;
 }
 
-unsigned init_side(vector<Net *> &net_map, vector<Cell *> &cell_map,
-                   const unsigned too_much, const bool sophisticated) {
+unsigned init_side(vector<Net*>& net_map,
+                   vector<Cell*>& cell_map,
+                   const unsigned too_much,
+                   const bool sophisticated) {
     if (sophisticated) {
         return sophisticated_init_side(net_map, cell_map, too_much);
     } else {
@@ -127,7 +129,8 @@ unsigned init_side(vector<Net *> &net_map, vector<Cell *> &cell_map,
     }
 }
 
-void gains(vector<Net *> &net_map, vector<Cell *> &cell_map,
+void gains(vector<Net*>& net_map,
+           vector<Cell*>& cell_map,
            const bool checking) {
     if (checking) {
 #ifdef NDEBUG
@@ -143,13 +146,14 @@ void gains(vector<Net *> &net_map, vector<Cell *> &cell_map,
     }
 
     for (unsigned net_idx = 0; net_idx < net_map.size(); ++net_idx) {
-        Net *net = net_map[net_idx];
-        const vector<unsigned> &cells = net->getCells();
+        Net* net = net_map[net_idx];
+        const vector<unsigned>& cells = net->getCells();
         unsigned idx, cnt;
         for (idx = cnt = 0; idx < cells.size(); ++idx) {
             const unsigned cell_name = cells[idx];
-            Cell *cell = cell_map[cell_name];
-            if (cell->getSide()) ++cnt;
+            Cell* cell = cell_map[cell_name];
+            if (cell->getSide())
+                ++cnt;
         }
 
         if (checking) {
@@ -168,16 +172,18 @@ void gains(vector<Net *> &net_map, vector<Cell *> &cell_map,
             if (cnt == 1) {
                 for (idx = count = 0; idx < cells.size(); ++idx) {
                     const unsigned cell_name = cells[idx];
-                    Cell *cell = cell_map[cell_name];
-                    if (cell->getSide()) ++(simulation[cell_name]), ++count;
+                    Cell* cell = cell_map[cell_name];
+                    if (cell->getSide())
+                        ++(simulation[cell_name]), ++count;
                 }
                 assert(count == 1 && "Update too much");
             }
             if (cnt + 1 == cells.size()) {
                 for (idx = count = 0; idx < cells.size(); ++idx) {
                     const unsigned cell_name = cells[idx];
-                    Cell *cell = cell_map[cell_name];
-                    if (!(cell->getSide())) ++(simulation[cell_name]), ++count;
+                    Cell* cell = cell_map[cell_name];
+                    if (!(cell->getSide()))
+                        ++(simulation[cell_name]), ++count;
                 }
                 assert(count == 1 && "Update too much");
             }
@@ -196,10 +202,10 @@ void gains(vector<Net *> &net_map, vector<Cell *> &cell_map,
     }
 }
 
-void init_gains(vector<Net *> &net_map, vector<Cell *> &cell_map) {
+void init_gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
     gains(net_map, cell_map, false);
 }
 
-void assert_gains(vector<Net *> &net_map, vector<Cell *> &cell_map) {
+void assert_gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
     gains(net_map, cell_map, true);
 }

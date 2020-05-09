@@ -7,9 +7,10 @@
 
 using namespace std;
 
-void input(const char *name, double &balance,
-           unordered_map<string, vector<string>> &net_map,
-           unordered_map<string, vector<string>> &cell_map) {
+void input(const char* name,
+           double& balance,
+           unordered_map<string, vector<string>>& net_map,
+           unordered_map<string, vector<string>>& cell_map) {
     unordered_map<string, unordered_set<string>> net_map_set, cell_map_set;
 
     auto file = ifstream(name);
@@ -18,18 +19,20 @@ void input(const char *name, double &balance,
 
     string buffer;
     while (file >> buffer) {
-        if (buffer != "NET") break;
+        if (buffer != "NET")
+            break;
 
         string net_name;
         file >> net_name;
 
         net_map_set[net_name] = unordered_set<string>();
 
-        unordered_set<string> &current_net = net_map_set[net_name];
+        unordered_set<string>& current_net = net_map_set[net_name];
 
         string cell_name;
         while (file >> cell_name) {
-            if (cell_name == ";") break;
+            if (cell_name == ";")
+                break;
 
             if (cell_map_set.find(cell_name) == cell_map_set.end()) {
                 cell_map_set[cell_name] = unordered_set<string>();
@@ -37,7 +40,7 @@ void input(const char *name, double &balance,
 
             current_net.insert(cell_name);
 
-            unordered_set<string> &current_cell = cell_map_set[cell_name];
+            unordered_set<string>& current_cell = cell_map_set[cell_name];
             current_cell.insert(net_name);
         }
     }
@@ -46,11 +49,11 @@ void input(const char *name, double &balance,
     assert(cell_map.size() == 0);
 
     for (auto iter = net_map_set.begin(); iter != net_map_set.end(); ++iter) {
-        const unordered_set<string> &names = iter->second;
+        const unordered_set<string>& names = iter->second;
         net_map[iter->first] = vector<string>(names.begin(), names.end());
     }
     for (auto iter = cell_map_set.begin(); iter != cell_map_set.end(); ++iter) {
-        const unordered_set<string> &names = iter->second;
+        const unordered_set<string>& names = iter->second;
         cell_map[iter->first] = vector<string>(names.begin(), names.end());
     }
 
@@ -58,10 +61,12 @@ void input(const char *name, double &balance,
     assert(cell_map.size() == cell_map_set.size());
 }
 
-void transformation(unordered_map<string, vector<string>> &old_net_map,
-                    unordered_map<string, vector<string>> &old_cell_map,
-                    vector<Net *> &net_map, vector<Cell *> &cell_map,
-                    vector<string> &net_names, vector<string> &cell_names) {
+void transformation(unordered_map<string, vector<string>>& old_net_map,
+                    unordered_map<string, vector<string>>& old_cell_map,
+                    vector<Net*>& net_map,
+                    vector<Cell*>& cell_map,
+                    vector<string>& net_names,
+                    vector<string>& cell_names) {
     unordered_map<string, unsigned> rev_net_names, rev_cell_names;
 
     assert(net_map.size() == 0 && cell_map.size() == 0);
@@ -98,10 +103,10 @@ void transformation(unordered_map<string, vector<string>> &old_net_map,
 
     for (auto iter = old_net_map.begin(); iter != old_net_map.end(); ++iter) {
         const string nname = iter->first;
-        const vector<string> &cell_list = iter->second;
+        const vector<string>& cell_list = iter->second;
         const unsigned net_id = rev_net_names[nname];
 
-        Net *net = net_map[net_id];
+        Net* net = net_map[net_id];
 
         assert(net_id < net_map.size());
 
@@ -113,7 +118,7 @@ void transformation(unordered_map<string, vector<string>> &old_net_map,
 
             net->pushCell(cell_id);
 
-            Cell *cell = cell_map[cell_id];
+            Cell* cell = cell_map[cell_id];
             cell->pushNet(net_id);
         }
     }
@@ -131,16 +136,19 @@ void transformation(unordered_map<string, vector<string>> &old_net_map,
     }
 }
 
-void output(const char *name, const vector<Net *> &net_map,
-            const vector<Cell *> &cell_map, const vector<string> &net_names,
-            const vector<string> &cell_names) {
+void output(const char* name,
+            const vector<Net*>& net_map,
+            const vector<Cell*>& cell_map,
+            const vector<string>& net_names,
+            const vector<string>& cell_names) {
     stringstream ss;
     auto file = ofstream(name);
 
     unsigned cut_size = 0;
     for (unsigned idx = 0; idx < net_map.size(); ++idx) {
-        const Net *net = net_map[idx];
-        if (net->trueCount() && net->falseCount()) ++cut_size;
+        const Net* net = net_map[idx];
+        if (net->trueCount() && net->falseCount())
+            ++cut_size;
     }
 
     ss << "Cutsize = " << cut_size << "\n";
@@ -154,7 +162,7 @@ void output(const char *name, const vector<Net *> &net_map,
 
     for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
         const string name = cell_names[idx];
-        const Cell *cell = cell_map[idx];
+        const Cell* cell = cell_map[idx];
         if (cell->getSide()) {
             ++true_count;
             true_ss << name << " ";

@@ -21,6 +21,6 @@ class Cell {
     void decGain();
 
     void pushNet(unsigned net);
-    const std::vector<unsigned> &getNets() const;
+    const std::vector<unsigned>& getNets() const;
     unsigned size() const;
 };

@@ -4,9 +4,13 @@ using namespace std;
 
 List::List() : cells(unordered_set<unsigned>()) {}
 
-const unordered_set<unsigned> &List::getList() const { return cells; }
+const unordered_set<unsigned>& List::getList() const {
+    return cells;
+}
 
-unsigned List::size() const { return cells.size(); }
+unsigned List::size() const {
+    return cells.size();
+}
 
 void List::push(unsigned name) {
     assert(cells.find(name) == cells.end());
@@ -27,29 +31,34 @@ bool List::contains(const unsigned name) const {
     return cells.find(name) != cells.end();
 }
 
-void List::erase(const unsigned name) { cells.erase(name); }
+void List::erase(const unsigned name) {
+    cells.erase(name);
+}
 
 Bucket::Bucket() : bucket(map<int, List>()) {}
 
-Bucket::Bucket(const vector<Cell *> &cell_map) : bucket(map<int, List>()) {
+Bucket::Bucket(const vector<Cell*>& cell_map) : bucket(map<int, List>()) {
     fill(cell_map);
 }
 
-const map<int, List> &Bucket::getBucket() const { return bucket; }
+const map<int, List>& Bucket::getBucket() const {
+    return bucket;
+}
 
-void Bucket::push(const unsigned name, const Cell *cell) {
+void Bucket::push(const unsigned name, const Cell* cell) {
     int gain = cell->getGain();
     bucket[gain].push(name);
 }
 
 unsigned Bucket::pop() {
     auto max_iter = bucket.rbegin();
-    List &list = max_iter->second;
+    List& list = max_iter->second;
 
     assert(list.size() != 0);
 
     const unsigned cell = list.pop();
-    if (list.size() == 0) bucket.erase(max_iter->first);
+    if (list.size() == 0)
+        bucket.erase(max_iter->first);
 
     return cell;
 }
@@ -64,13 +73,14 @@ unsigned Bucket::size() const {
 
 bool Bucket::contains(unsigned name) {
     for (auto iter = bucket.begin(); iter != bucket.end(); ++iter) {
-        if (iter->second.contains(name)) return true;
+        if (iter->second.contains(name))
+            return true;
     }
     return false;
 }
 
 void Bucket::update(int old_gain, int new_gain, unsigned name) {
-    auto &old_list = bucket[old_gain];
+    auto& old_list = bucket[old_gain];
 
     assert(old_list.contains(name));
 
@@ -78,29 +88,29 @@ void Bucket::update(int old_gain, int new_gain, unsigned name) {
     if (old_list.size() == 0) {
         bucket.erase(old_gain);
     }
-    auto &new_list = bucket[new_gain];
+    auto& new_list = bucket[new_gain];
 
     assert(!new_list.contains(name));
 
     new_list.push(name);
 }
 
-void Bucket::fill(const vector<Cell *> &cell_map) {
+void Bucket::fill(const vector<Cell*>& cell_map) {
     for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
         push(idx, cell_map[idx]);
     }
     assert(size() == cell_map.size());
 }
 
-Bucket &Bucket::operator=(Bucket &&b) {
+Bucket& Bucket::operator=(Bucket&& b) {
     bucket = move(b.bucket);
     return *this;
 }
 
-void Bucket::empty(Bucket &other, unordered_set<unsigned> &seen) {
+void Bucket::empty(Bucket& other, unordered_set<unsigned>& seen) {
     for (auto iter = other.bucket.begin(); iter != other.bucket.end(); ++iter) {
         const unsigned gain = iter->first;
-        List &list = iter->second;
+        List& list = iter->second;
 
         assert(list.size() != 0);
 

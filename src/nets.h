@@ -18,6 +18,6 @@ class Net {
     void decCountOn(bool side);
 
     void pushCell(unsigned cell);
-    const std::vector<unsigned> &getCells() const;
+    const std::vector<unsigned>& getCells() const;
     unsigned size() const;
 };
