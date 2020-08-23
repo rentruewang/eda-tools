@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O3 -std=c++11 -Wall
+CXXFLAGS = -O3 -std=c++11 -flto -Wall -Wextra
 TARGETS = assertions.o buckets.o cells.o fm.o init.o io.o main.o nets.o
 BINARY = fm
 FLAGS = 

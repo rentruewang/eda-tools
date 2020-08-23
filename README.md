@@ -1,3 +1,5 @@
+![FM IMG](./img/Fiduccia-Mattheyes.png)
+
 # Fiduccia-Mattheyses Algorithm 
 
 #### How the different parts of the program interact with one another
