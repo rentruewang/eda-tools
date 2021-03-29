@@ -12,7 +12,7 @@ $(BINARY): $(TARGETS)
 	$(CXX) $(CXXFLAGS) $? -o $(BINARY) $(FLAGS)
 
 %.o: src/%.cpp
-	$(CXX) -c $(CXXFLAGS) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $< -o $@ $(FLAGS)
 
 clean:
 	rm -f $(BINARY) $(TARGETS)
