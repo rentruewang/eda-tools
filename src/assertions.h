@@ -4,4 +4,4 @@
 
 #include <iostream>
 
-void non_release_mode();
+void log_release_mode();

@@ -10,24 +10,41 @@ function evaluate
     python evaluate.py $indir/input_"$argv".dat $outdir/output_"$argv".txt
 end
 
-if not test -d $indir; or not test -d $outdir
-    printf "Missing either indir:$indir or outdir:$outdir"
-    exit 255
+function checkDirs
+    function exitIfMiss
+        if not test -d $argv[1]
+            echo Missing folder: $argv[1]
+            exit 255
+        end
+    end
+    
+    exitIfMiss $indir
+    exitIfMiss $outdir
 end
 
-switch $argv[1]
+argparse 'C/clean' 'c/comp' 'e/eval' 'r/run' -- $argv
 
-case "-*clean*"
+if set -q _flag_clean
     make clean
     rm -r $outdir
     mkdir -p $outdir
-case "-*comp*"
+end
+
+if set -q _flag_comp
     make FLAGS=$argv[2..-1]
-case "-*run*"
+end
+
+if set -q _flag_run
+    checkDirs
+
     for i in (seq 0 5)
         execute $i
     end
-case "-*eval*"
+end
+
+if set -q _flag_eval
+    checkDirs
+
     for i in (seq 0 5)
         evaluate $i
     end

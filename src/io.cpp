@@ -1,5 +1,6 @@
 #include "io.h"
 
+#include <cstdarg>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -147,8 +148,9 @@ void output(const char* name,
     unsigned cut_size = 0;
     for (unsigned idx = 0; idx < net_map.size(); ++idx) {
         const Net* net = net_map[idx];
-        if (net->trueCount() && net->falseCount())
+        if (net->trueCount() && net->falseCount()) {
             ++cut_size;
+        }
     }
 
     ss << "Cutsize = " << cut_size << "\n";
@@ -179,4 +181,15 @@ void output(const char* name,
 
     file << "G1 " << true_count << true_ss.str();
     file << "G2 " << false_count << false_ss.str();
+}
+
+int silent_printf(const char* format, ...) {
+#if !defined(SILENT)
+    va_list args;
+    va_start(args, format);
+    int result = vprintf(format, args);
+    va_end(args);
+    return result;
+#endif
+    return 0;
 }

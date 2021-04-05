@@ -57,8 +57,9 @@ unsigned Bucket::pop() {
     assert(list.size() != 0);
 
     const unsigned cell = list.pop();
-    if (list.size() == 0)
+    if (list.size() == 0) {
         bucket.erase(max_iter->first);
+    }
 
     return cell;
 }
@@ -73,8 +74,9 @@ unsigned Bucket::size() const {
 
 bool Bucket::contains(unsigned name) {
     for (auto iter = bucket.begin(); iter != bucket.end(); ++iter) {
-        if (iter->second.contains(name))
+        if (iter->second.contains(name)) {
             return true;
+        }
     }
     return false;
 }

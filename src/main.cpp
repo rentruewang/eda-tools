@@ -12,7 +12,7 @@
 int main(int argc, char const* argv[]) {
     using namespace std;
 
-    non_release_mode();
+    log_release_mode();
 
     double balance;
     vector<Net*> net_map;
@@ -32,18 +32,18 @@ int main(int argc, char const* argv[]) {
     assert(cell_size == cell_map.size());
     assert(cell_size == cell_names.size());
 
-    const unsigned tolerate =
-        static_cast<unsigned>(static_cast<double>(cell_size) * balance);
+    const unsigned tolerate = static_cast<unsigned>(balance * cell_size);
     const unsigned half = cell_size >> 1;
     const unsigned too_much = half + tolerate;
 
     constexpr bool sophisticated = true;
     unsigned sideTrue(init_side(net_map, cell_map, too_much, sophisticated));
 
-#ifndef SILENT
-    printf("balance = %lf, net_size = %u, cell_size = %u\n", balance, net_size,
-           cell_size);
-#endif
+    silent_printf(
+        "balance = %lf, "
+        "net_size = %u, "
+        "cell_size = %u\n",
+        balance, net_size, cell_size);
 
     init_gains(net_map, cell_map);
     assert_gains(net_map, cell_map);
@@ -57,17 +57,15 @@ int main(int argc, char const* argv[]) {
     assert(net_map.size() == net_size);
     assert(cell_map.size() == cell_size);
 
-    for (unsigned idx = 0; idx < net_map.size(); ++idx) {
-        delete net_map[idx];
+    for (Net* net_ptr : net_map) {
+        delete net_ptr;
     }
 
-    for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
-        delete cell_map[idx];
+    for (Cell* cell_ptr : cell_map) {
+        delete cell_ptr;
     }
 
-#ifndef SILENT
-    printf("Program exit.\n");
-#endif
+    silent_printf("Program exit.\n");
 
     return 0;
 }

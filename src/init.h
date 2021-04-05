@@ -17,9 +17,8 @@ unsigned init_side(std::vector<Net*>& net_map,
                    const unsigned too_much,
                    const bool sophisticated);
 
-void gains(std::vector<Net*>& net_map,
-           std::vector<Cell*>& cell_map,
-           const bool checking);
+template <bool checking>
+void gains(std::vector<Net*>& net_map, std::vector<Cell*>& cell_map);
 
 void init_gains(std::vector<Net*>& net_map, std::vector<Cell*>& cell_map);
 void assert_gains(std::vector<Net*>& net_map, std::vector<Cell*>& cell_map);

@@ -1,14 +1,13 @@
 #include "fm.h"
+#include "io.h"
 
 #include <iostream>
 #include <utility>
 
 using namespace std;
 
-bool meta_data(unsigned num_iter, int result) {
-#ifndef SILENT
-    printf("On iteration = %03d, gain = %06d\n", num_iter, result);
-#endif
+bool meta_data(int num_iter, int result) {
+    silent_printf("On iteration = %03d, gain = %06d\n", num_iter, result);
     return result > 0;
 }
 
@@ -159,13 +158,14 @@ int fm_once(vector<Net*>& net_map,
     unordered_set<unsigned> seen;
     Bucket next_bucket;
     vector<unsigned> history;
-    unsigned max_idx, count;
-    int max_gain, acc_gain, single_gain, max_single_gain = 1;
 
     const unsigned SIZE = cell_map.size();
     assert(bucket.size() == SIZE);
     assert(next_bucket.size() == 0);
 
+    unsigned max_idx, count;
+    int max_gain, acc_gain, single_gain;
+    int max_single_gain = 1;
     for (count = max_idx = 0, max_gain = acc_gain = 0; count < SIZE; ++count) {
         const unsigned current_cell_name = bucket.pop();
         Cell* cell = cell_map[current_cell_name];
@@ -184,8 +184,9 @@ int fm_once(vector<Net*>& net_map,
                                          seen, current_cell_name, cell);
             acc_gain += single_gain;
 
-            if (max_single_gain < single_gain)
+            if (max_single_gain < single_gain) {
                 max_single_gain = single_gain;
+            }
 
             assert(seen.find(current_cell_name) != seen.end());
             history.push_back(current_cell_name);
@@ -227,9 +228,7 @@ int fm_once(vector<Net*>& net_map,
         assert(iter->second.size() != 0);
     }
 
-#ifndef SILENT
-    printf("Made %u moves\n", max_idx);
-#endif
+    silent_printf("Made %u moves\n", max_idx);
     return max_gain;
 }
 
@@ -242,18 +241,17 @@ void fm(vector<Net*>& net_map,
     const unsigned LOWER = MIDDLE - tolerate, UPPER = MIDDLE + tolerate;
     Bucket bucket(cell_map);
 
-#ifndef SILENT
-    printf("between (%d, %d)\n", LOWER, UPPER);
-#endif
+    silent_printf("between (%d, %d)\n", LOWER, UPPER);
 
-    for (unsigned iter = 0; meta_data(iter, fm_once(
-                                                net_map, cell_map, bucket,
-                                                [=](const unsigned size) {
-                                                    return size > LOWER &&
-                                                           size < UPPER;
-                                                },
-                                                part));
-         ++iter)
+    auto callAndEval = [&](int iter) {
+        auto balanced = [=](const unsigned size) {
+            return size > LOWER && size < UPPER;
+        };
+        int result = fm_once(net_map, cell_map, bucket, balanced, part);
+        return meta_data(iter, result);
+    };
+
+    for (int iter = 0; callAndEval(iter); ++iter)
         ;
 
     unsigned index = 0, count_true = 0;

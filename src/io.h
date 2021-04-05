@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdarg>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -26,3 +27,5 @@ void output(const char* name,
             const std::vector<Cell*>& cell_map,
             const std::vector<std::string>& net_names,
             const std::vector<std::string>& cell_names);
+
+int silent_printf(const char* format, ...);
