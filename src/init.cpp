@@ -6,22 +6,22 @@
 
 using namespace std;
 
-unsigned naive_init_side(vector<Cell*>& cell_map) {
-    const unsigned SIZE = cell_map.size();
+unsigned naive_init_side(vector<Cell*>& cmap) {
+    const unsigned SIZE = cmap.size();
     const unsigned HALF = SIZE >> 1;
-    for (unsigned idx = 0, cnt = 0; idx < cell_map.size(); ++idx, ++cnt) {
-        cell_map[idx]->setSide(cnt < HALF);
+    for (unsigned idx = 0, cnt = 0; idx < cmap.size(); ++idx, ++cnt) {
+        cmap[idx]->setSide(cnt < HALF);
     }
     return HALF;
 }
 
-unsigned sophisticated_init_side(vector<Net*>& net_map,
-                                 vector<Cell*>& cell_map,
+unsigned sophisticated_init_side(vector<Net*>& nmap,
+                                 vector<Cell*>& cmap,
                                  const unsigned too_much) {
-    const unsigned net_size = net_map.size();
+    const unsigned net_size = nmap.size();
     set<unsigned> cell_inited;
 
-    auto net_list = vector<Net*>(net_map.begin(), net_map.end());
+    auto net_list = vector<Net*>(nmap.begin(), nmap.end());
     auto net_cmp = [](const Net* n1, const Net* n2) {
         return n1->size() < n2->size();
     };
@@ -36,15 +36,15 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
         for (cell_idx = confirmed_true = confirmed_false = unconfirmed = 0;
              cell_idx < associated.size(); ++cell_idx) {
             const unsigned name = associated[cell_idx];
-            if (cell_inited.find(name) == cell_inited.end()) {
-                ++unconfirmed;
-            } else {
-                const Cell* cell = cell_map[name];
+            if (cell_inited.contains(name)) {
+                const Cell* cell = cmap[name];
                 if (cell->getSide()) {
                     ++confirmed_true;
                 } else {
                     ++confirmed_false;
                 }
+            } else {
+                ++unconfirmed;
             }
         }
 
@@ -56,9 +56,9 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
         if (push_to_true && count_true + unconfirmed < too_much) {
             for (cell_idx = 0; cell_idx < associated.size(); ++cell_idx) {
                 const unsigned name = associated[cell_idx];
-                if (cell_inited.find(name) == cell_inited.end()) {
+                if (!cell_inited.contains(name)) {
                     cell_inited.insert(name);
-                    Cell* cell = cell_map[name];
+                    Cell* cell = cmap[name];
                     cell->setSide(true);
                     ++count_true;
                 }
@@ -66,9 +66,9 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
         } else if (!push_to_true && count_false + unconfirmed < too_much) {
             for (cell_idx = 0; cell_idx < associated.size(); ++cell_idx) {
                 const unsigned name = associated[cell_idx];
-                if (cell_inited.find(name) == cell_inited.end()) {
+                if (!cell_inited.contains(name)) {
                     cell_inited.insert(name);
-                    Cell* cell = cell_map[name];
+                    Cell* cell = cmap[name];
                     cell->setSide(false);
                     ++count_false;
                 }
@@ -80,9 +80,9 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
                        "Need to rethink");
                 for (cell_idx = 0; cell_idx < associated.size(); ++cell_idx) {
                     const unsigned name = associated[cell_idx];
-                    if (cell_inited.find(name) == cell_inited.end()) {
+                    if (!cell_inited.contains(name)) {
                         cell_inited.insert(name);
-                        Cell* cell = cell_map[name];
+                        Cell* cell = cmap[name];
                         cell->setSide(false);
                         ++count_false;
                     }
@@ -92,9 +92,9 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
                        "Need to rethink");
                 for (cell_idx = 0; cell_idx < associated.size(); ++cell_idx) {
                     const unsigned name = associated[cell_idx];
-                    if (cell_inited.find(name) == cell_inited.end()) {
+                    if (!cell_inited.contains(name)) {
                         cell_inited.insert(name);
-                        Cell* cell = cell_map[name];
+                        Cell* cell = cmap[name];
                         cell->setSide(true);
                         ++count_true;
                     }
@@ -104,12 +104,12 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
     }
 
     // Assertions
-    assert(count_true + count_false == cell_map.size());
-    assert(cell_inited.size() == cell_map.size());
+    assert(count_true + count_false == cmap.size());
+    assert(cell_inited.size() == cmap.size());
     unsigned ctrue = 0, cfalse = 0;
-    for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
-        assert(cell_inited.find(idx) != cell_inited.end());
-        if (cell_map[idx]->getSide()) {
+    for (unsigned idx = 0; idx < cmap.size(); ++idx) {
+        assert(cell_inited.contains(idx));
+        if (cmap[idx]->getSide()) {
             ++ctrue;
         } else {
             ++cfalse;
@@ -120,19 +120,19 @@ unsigned sophisticated_init_side(vector<Net*>& net_map,
     return count_true;
 }
 
-unsigned init_side(vector<Net*>& net_map,
-                   vector<Cell*>& cell_map,
+unsigned init_side(vector<Net*>& nmap,
+                   vector<Cell*>& cmap,
                    const unsigned too_much,
                    const bool sophisticated) {
     if (sophisticated) {
-        return sophisticated_init_side(net_map, cell_map, too_much);
+        return sophisticated_init_side(nmap, cmap, too_much);
     } else {
-        return naive_init_side(cell_map);
+        return naive_init_side(cmap);
     }
 }
 
 template <bool checking>
-void gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
+void gains(vector<Net*>& nmap, vector<Cell*>& cmap) {
     if (checking) {
 #ifdef NDEBUG
         return;
@@ -140,15 +140,15 @@ void gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
         printf("Checking Nets and Cells\n");
     }
 
-    vector<int> simulation = vector<int>(cell_map.size(), 0);
+    vector<int> simulation = vector<int>(cmap.size(), 0);
 
-    for (unsigned net_idx = 0; net_idx < net_map.size(); ++net_idx) {
-        Net* net = net_map[net_idx];
+    for (unsigned net_idx = 0; net_idx < nmap.size(); ++net_idx) {
+        Net* net = nmap[net_idx];
         const vector<unsigned>& cells = net->getCells();
         unsigned idx, cnt;
         for (idx = cnt = 0; idx < cells.size(); ++idx) {
-            const unsigned cell_name = cells[idx];
-            Cell* cell = cell_map[cell_name];
+            const unsigned cname = cells[idx];
+            Cell* cell = cmap[cname];
             if (cell->getSide()) {
                 ++cnt;
             }
@@ -162,17 +162,17 @@ void gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
 
         if (cnt == 0 || cnt == cells.size()) {
             for (idx = 0; idx < cells.size(); ++idx) {
-                const unsigned cell_name = cells[idx];
-                --(simulation[cell_name]);
+                const unsigned cname = cells[idx];
+                --(simulation[cname]);
             }
         } else {
             unsigned count;
             if (cnt == 1) {
                 for (idx = count = 0; idx < cells.size(); ++idx) {
-                    const unsigned cell_name = cells[idx];
-                    Cell* cell = cell_map[cell_name];
+                    const unsigned cname = cells[idx];
+                    Cell* cell = cmap[cname];
                     if (cell->getSide()) {
-                        ++(simulation[cell_name]);
+                        ++(simulation[cname]);
                         ++count;
                     }
                 }
@@ -180,10 +180,10 @@ void gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
             }
             if (cnt + 1 == cells.size()) {
                 for (idx = count = 0; idx < cells.size(); ++idx) {
-                    const unsigned cell_name = cells[idx];
-                    Cell* cell = cell_map[cell_name];
+                    const unsigned cname = cells[idx];
+                    Cell* cell = cmap[cname];
                     if (!(cell->getSide())) {
-                        ++(simulation[cell_name]);
+                        ++(simulation[cname]);
                         ++count;
                     }
                 }
@@ -192,22 +192,22 @@ void gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
         }
     }
 
-    assert(simulation.size() == cell_map.size());
+    assert(simulation.size() == cmap.size());
 
     for (unsigned idx = 0; idx < simulation.size(); ++idx) {
         if (checking) {
-            assert(cell_map[idx]->getGain() == simulation[idx] &&
+            assert(cmap[idx]->getGain() == simulation[idx] &&
                    "Gain miscalculated");
         } else {
-            cell_map[idx]->setGain(simulation[idx]);
+            cmap[idx]->setGain(simulation[idx]);
         }
     }
 }
 
-void init_gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
-    gains<false>(net_map, cell_map);
+void init_gains(vector<Net*>& nmap, vector<Cell*>& cmap) {
+    gains<false>(nmap, cmap);
 }
 
-void assert_gains(vector<Net*>& net_map, vector<Cell*>& cell_map) {
-    gains<true>(net_map, cell_map);
+void assert_gains(vector<Net*>& nmap, vector<Cell*>& cmap) {
+    gains<true>(nmap, cmap);
 }

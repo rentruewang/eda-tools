@@ -22,7 +22,7 @@ function checkDirs
     exitIfMiss $outdir
 end
 
-argparse 'C/clean' 'c/comp' 'e/eval' 'r/run' -- $argv
+argparse 'C/clean' 'c/comp' 'e/eval' 'r/run' 'f/flags=+' -- $argv
 
 if set -q _flag_clean
     make clean
@@ -31,7 +31,7 @@ if set -q _flag_clean
 end
 
 if set -q _flag_comp
-    make FLAGS=$argv[2..-1]
+    make -j FLAGS=$_flag_flags
 end
 
 if set -q _flag_run

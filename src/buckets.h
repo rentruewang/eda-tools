@@ -11,7 +11,7 @@ class List {
 
    public:
     List();
-    const std::unordered_set<unsigned>& getList() const;
+    const std::unordered_set<unsigned>& get() const;
     unsigned size() const;
     void push(unsigned name);
     unsigned pop();
@@ -24,9 +24,9 @@ class Bucket {
 
    public:
     Bucket();
-    Bucket(const std::vector<Cell*>& cell_map);
+    Bucket(const std::vector<Cell*>& cmap);
 
-    const std::map<int, List>& getBucket() const;
+    const std::map<int, List>& get() const;
 
     void push(const unsigned name, const Cell* cell);
     unsigned pop();
@@ -34,7 +34,7 @@ class Bucket {
 
     bool contains(unsigned name);
     void update(int old_gain, int new_gain, unsigned name);
-    void fill(const std::vector<Cell*>& cell_map);
+    void fill(const std::vector<Cell*>& cmap);
     void empty(Bucket& other, std::unordered_set<unsigned>& seen);
 
     Bucket& operator=(Bucket&& b);

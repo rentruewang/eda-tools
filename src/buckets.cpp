@@ -4,7 +4,7 @@ using namespace std;
 
 List::List() : cells(unordered_set<unsigned>()) {}
 
-const unordered_set<unsigned>& List::getList() const {
+const unordered_set<unsigned>& List::get() const {
     return cells;
 }
 
@@ -13,7 +13,7 @@ unsigned List::size() const {
 }
 
 void List::push(unsigned name) {
-    assert(cells.find(name) == cells.end());
+    assert(!cells.contains(name));
     cells.insert(name);
 }
 
@@ -28,7 +28,7 @@ unsigned List::pop() {
 }
 
 bool List::contains(const unsigned name) const {
-    return cells.find(name) != cells.end();
+    return cells.contains(name);
 }
 
 void List::erase(const unsigned name) {
@@ -37,11 +37,11 @@ void List::erase(const unsigned name) {
 
 Bucket::Bucket() : bucket(map<int, List>()) {}
 
-Bucket::Bucket(const vector<Cell*>& cell_map) : bucket(map<int, List>()) {
-    fill(cell_map);
+Bucket::Bucket(const vector<Cell*>& cmap) : bucket(map<int, List>()) {
+    fill(cmap);
 }
 
-const map<int, List>& Bucket::getBucket() const {
+const map<int, List>& Bucket::get() const {
     return bucket;
 }
 
@@ -97,11 +97,11 @@ void Bucket::update(int old_gain, int new_gain, unsigned name) {
     new_list.push(name);
 }
 
-void Bucket::fill(const vector<Cell*>& cell_map) {
-    for (unsigned idx = 0; idx < cell_map.size(); ++idx) {
-        push(idx, cell_map[idx]);
+void Bucket::fill(const vector<Cell*>& cmap) {
+    for (unsigned idx = 0; idx < cmap.size(); ++idx) {
+        push(idx, cmap[idx]);
     }
-    assert(size() == cell_map.size());
+    assert(size() == cmap.size());
 }
 
 Bucket& Bucket::operator=(Bucket&& b) {

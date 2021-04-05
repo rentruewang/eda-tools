@@ -11,21 +11,21 @@
 
 void input(const char* name,
            double& balance,
-           std::unordered_map<std::string, std::vector<std::string>>& net_map,
-           std::unordered_map<std::string, std::vector<std::string>>& cell_map);
+           std::unordered_map<std::string, std::vector<std::string>>& nmap,
+           std::unordered_map<std::string, std::vector<std::string>>& cmap);
 
 void transformation(
-    std::unordered_map<std::string, std::vector<std::string>>& old_net_map,
-    std::unordered_map<std::string, std::vector<std::string>>& old_cell_map,
-    std::vector<Net*>& net_map,
-    std::vector<Cell*>& cell_map,
-    std::vector<std::string>& net_names,
-    std::vector<std::string>& cell_names);
+    std::unordered_map<std::string, std::vector<std::string>>& old_nmap,
+    std::unordered_map<std::string, std::vector<std::string>>& old_cmap,
+    std::vector<Net*>& nmap,
+    std::vector<Cell*>& cmap,
+    std::vector<std::string>& nnames,
+    std::vector<std::string>& cnames);
 
 void output(const char* name,
-            const std::vector<Net*>& net_map,
-            const std::vector<Cell*>& cell_map,
-            const std::vector<std::string>& net_names,
-            const std::vector<std::string>& cell_names);
+            const std::vector<Net*>& nmap,
+            const std::vector<Cell*>& cmap,
+            const std::vector<std::string>& nnames,
+            const std::vector<std::string>& cnames);
 
 int silent_printf(const char* format, ...);

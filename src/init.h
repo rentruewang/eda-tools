@@ -6,19 +6,19 @@
 #include "cells.h"
 #include "nets.h"
 
-unsigned naive_init_side(std::vector<Cell*>& cell_map);
+unsigned naive_init_side(std::vector<Cell*>& cmap);
 
-unsigned sophisticated_init_side(std::vector<Net*>& net_map,
-                                 std::vector<Cell*>& cell_map,
+unsigned sophisticated_init_side(std::vector<Net*>& nmap,
+                                 std::vector<Cell*>& cmap,
                                  const unsigned too_much);
 
-unsigned init_side(std::vector<Net*>& net_map,
-                   std::vector<Cell*>& cell_map,
+unsigned init_side(std::vector<Net*>& nmap,
+                   std::vector<Cell*>& cmap,
                    const unsigned too_much,
                    const bool sophisticated);
 
 template <bool checking>
-void gains(std::vector<Net*>& net_map, std::vector<Cell*>& cell_map);
+void gains(std::vector<Net*>& nmap, std::vector<Cell*>& cmap);
 
-void init_gains(std::vector<Net*>& net_map, std::vector<Cell*>& cell_map);
-void assert_gains(std::vector<Net*>& net_map, std::vector<Cell*>& cell_map);
+void init_gains(std::vector<Net*>& nmap, std::vector<Cell*>& cmap);
+void assert_gains(std::vector<Net*>& nmap, std::vector<Cell*>& cmap);
