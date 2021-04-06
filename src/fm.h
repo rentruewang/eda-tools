@@ -33,9 +33,6 @@ class FloorPlan {
 
     double balance() const;
 
-    Bucket& bucket();
-    const Bucket& bucket() const;
-
     template <bool soph>
     void init_side();
 

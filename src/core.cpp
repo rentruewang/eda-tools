@@ -97,7 +97,7 @@ void FloorPlan::fm() {
 
     debug_printf("between (%d, %d)\n", LOWER, UPPER);
 
-    auto runFunc = [&](unsigned iter) -> bool {
+    auto runner = [&](unsigned iter) -> bool {
         auto is_balanced = [=](const unsigned size) -> bool {
             return size > LOWER && size < UPPER;
         };
@@ -106,7 +106,7 @@ void FloorPlan::fm() {
         return result > 0;
     };
 
-    for (unsigned iter = 0; runFunc(iter); ++iter)
+    for (unsigned iter = 0; runner(iter); ++iter)
         ;
 
     unsigned count_true = 0;

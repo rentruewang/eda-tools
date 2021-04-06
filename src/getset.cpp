@@ -62,11 +62,3 @@ const vector<Cell*>& FloorPlan::cmap() const {
 double FloorPlan::balance() const {
     return _balance;
 }
-
-Bucket& FloorPlan::bucket() {
-    return _bucket;
-}
-
-const Bucket& FloorPlan::bucket() const {
-    return _bucket;
-}
