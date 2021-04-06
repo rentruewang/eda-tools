@@ -1,5 +1,7 @@
 #include "buckets.h"
 
+#include <assert.h>
+
 using namespace std;
 
 List::List() : cells(unordered_set<unsigned>()) {}
@@ -46,7 +48,7 @@ const map<int, List>& Bucket::get() const {
 }
 
 void Bucket::push(const unsigned name, const Cell* cell) {
-    int gain = cell->getGain();
+    int gain = cell->gain();
     bucket[gain].push(name);
 }
 

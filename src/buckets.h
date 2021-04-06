@@ -3,12 +3,9 @@
 #include <map>
 #include <unordered_set>
 
-#include "assertions.h"
 #include "cells.h"
 
 class List {
-    std::unordered_set<unsigned> cells;
-
    public:
     List();
     const std::unordered_set<unsigned>& get() const;
@@ -17,14 +14,17 @@ class List {
     unsigned pop();
     bool contains(const unsigned name) const;
     void erase(const unsigned name);
+
+   private:
+    std::unordered_set<unsigned> cells;
 };
 
 class Bucket {
-    std::map<int, List> bucket;
-
    public:
     Bucket();
     Bucket(const std::vector<Cell*>& cmap);
+
+    Bucket& operator=(Bucket&& b);
 
     const std::map<int, List>& get() const;
 
@@ -37,5 +37,6 @@ class Bucket {
     void fill(const std::vector<Cell*>& cmap);
     void empty(Bucket& other, std::unordered_set<unsigned>& seen);
 
-    Bucket& operator=(Bucket&& b);
+   private:
+    std::map<int, List> bucket;
 };

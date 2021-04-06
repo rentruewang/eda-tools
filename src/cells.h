@@ -3,24 +3,26 @@
 #include <vector>
 
 class Cell {
-    // using int to prevent padding issue
-    int side;
-    int gain;
-    std::vector<unsigned> nets;
-
    public:
     Cell();
+
     void flip();
 
-    void setSide(bool s);
-    bool getSide() const;
+    void side(bool s);
+    bool side() const;
 
-    int getGain() const;
-    void setGain(int g);
-    void incGain();
-    void decGain();
+    int gain() const;
+    void gain(int g);
+    void inc_gain();
+    void dec_gain();
 
-    void pushNet(unsigned net);
-    const std::vector<unsigned>& getNets() const;
+    void push_net(unsigned net);
+    const std::vector<unsigned>& nets() const;
     unsigned size() const;
+
+   private:
+    // using int to prevent padding issue
+    int _side;
+    int _gain;
+    std::vector<unsigned> _nets;
 };

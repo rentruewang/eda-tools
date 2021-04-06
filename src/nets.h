@@ -3,21 +3,22 @@
 #include <vector>
 
 class Net {
-    unsigned on_true_side;
-    std::vector<unsigned> cells;
-
    public:
     Net();
 
     void setCount(unsigned u);
 
-    unsigned trueCount() const;
-    unsigned falseCount() const;
-    unsigned countOn(bool side) const;
-    void incCountOn(bool side);
-    void decCountOn(bool side);
+    unsigned true_count() const;
+    unsigned false_count() const;
+    unsigned count(bool side) const;
+    void inc_count(bool side);
+    void dec_count(bool side);
 
-    void pushCell(unsigned cell);
-    const std::vector<unsigned>& getCells() const;
+    void push_cell(unsigned cell);
+    const std::vector<unsigned>& cells() const;
     unsigned size() const;
+
+   private:
+    unsigned _true_count;
+    std::vector<unsigned> _cells;
 };

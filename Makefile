@@ -1,6 +1,6 @@
-CXX = g++
-CXXFLAGS = -O3 -std=c++20 -flto -Wall -Wextra
-TARGETS = assertions.o buckets.o cells.o fm.o helper.o init.o io.o main.o nets.o
+CC = g++
+CCFLAGS = -O3 -std=c++20 -flto -Wall -Wextra 
+TARGETS = buckets.o cells.o core.o getset.o init.o io.o helper.o main.o nets.o utils.o
 BINARY = fm
 FLAGS = 
 
@@ -9,10 +9,10 @@ FLAGS =
 all: $(BINARY)
 
 $(BINARY): $(TARGETS)
-	$(CXX) $(CXXFLAGS) $? -o $(BINARY) $(FLAGS)
+	$(CC) $(CCFLAGS) $? -o $(BINARY) $(FLAGS)
 
 %.o: src/%.cpp
-	$(CXX) -c $(CXXFLAGS) $< -o $@ $(FLAGS)
+	$(CC) -c $(CCFLAGS) $< -o $@ $(FLAGS)
 
 clean:
 	rm -f $(BINARY) $(TARGETS)

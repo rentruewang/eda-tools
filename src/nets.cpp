@@ -2,48 +2,48 @@
 
 using namespace std;
 
-Net::Net() : on_true_side(0), cells(vector<unsigned>()) {}
+Net::Net() : _true_count(0), _cells(vector<unsigned>()) {}
 
 void Net::setCount(unsigned u) {
-    on_true_side = u;
+    _true_count = u;
 }
 
-unsigned Net::trueCount() const {
-    return on_true_side;
+unsigned Net::true_count() const {
+    return _true_count;
 }
 
-unsigned Net::falseCount() const {
-    return cells.size() - on_true_side;
+unsigned Net::false_count() const {
+    return _cells.size() - _true_count;
 }
 
-unsigned Net::countOn(bool side) const {
+unsigned Net::count(bool side) const {
     if (side) {
-        return trueCount();
+        return true_count();
     } else {
-        return falseCount();
+        return false_count();
     }
 }
 
-void Net::incCountOn(bool side) {
+void Net::inc_count(bool side) {
     if (side) {
-        ++on_true_side;
+        ++_true_count;
     } else {
-        --on_true_side;
+        --_true_count;
     }
 }
 
-void Net::decCountOn(bool side) {
-    incCountOn(!side);
+void Net::dec_count(bool side) {
+    inc_count(!side);
 }
 
-void Net::pushCell(unsigned cell) {
-    cells.push_back(cell);
+void Net::push_cell(unsigned cell) {
+    _cells.push_back(cell);
 }
 
-const vector<unsigned>& Net::getCells() const {
-    return cells;
+const vector<unsigned>& Net::cells() const {
+    return _cells;
 }
 
 unsigned Net::size() const {
-    return cells.size();
+    return _cells.size();
 }
