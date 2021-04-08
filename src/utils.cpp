@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 void log_release_mode() {
-#ifdef NDEBUG
+#if defined(NDEBUG)
     return;
 #endif
     static bool first = true;
@@ -16,12 +16,13 @@ void log_release_mode() {
 }
 
 int debug_printf(const char* format, ...) {
-#if !defined(SILENT)
+#if defined(NDEBUG)
+    return 0;
+#else
     va_list args;
     va_start(args, format);
     int result = vprintf(format, args);
     va_end(args);
     return result;
 #endif
-    return 0;
 }
