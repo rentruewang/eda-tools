@@ -1,6 +1,6 @@
 #include "buckets.h"
 
-#include <assert.h>
+#include <cassert>
 
 using namespace std;
 

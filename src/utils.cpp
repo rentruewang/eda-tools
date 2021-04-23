@@ -1,8 +1,8 @@
 #include "utils.h"
 
-#include <assert.h>
-#include <stdarg.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
 
 void log_release_mode() {
 #if defined(NDEBUG)
@@ -15,7 +15,7 @@ void log_release_mode() {
     }
 }
 
-int debug_printf(const char* format, ...) {
+int debug_printf(const char* format...) {
 #if defined(NDEBUG)
     return 0;
 #else

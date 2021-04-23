@@ -1,7 +1,7 @@
 #include "fm.h"
 #include "helper.h"
 
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <unordered_set>
 #include <utility>

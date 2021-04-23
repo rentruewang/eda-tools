@@ -1,7 +1,6 @@
 #include "fm.h"
 
-#include <assert.h>
-#include <stdarg.h>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <sstream>
