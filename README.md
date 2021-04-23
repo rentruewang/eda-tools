@@ -2,7 +2,7 @@
 
 # Fiduccia-Mattheyses Algorithm 
 
-https://img.shields.io/lgtm/grade/python/github/b06901038/Fiduccia-Mattheyses?style=for-the-badge
+![](https://img.shields.io/lgtm/grade/python/github/b06901038/Fiduccia-Mattheyses?style=for-the-badge)
 
 #### How the different parts of the program interact with one another
 
