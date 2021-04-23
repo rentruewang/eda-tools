@@ -2,6 +2,8 @@
 
 # Fiduccia-Mattheyses Algorithm 
 
+https://img.shields.io/lgtm/grade/python/github/b06901038/Fiduccia-Mattheyses?style=for-the-badge
+
 #### How the different parts of the program interact with one another
 
 - Given a list of Nets $N$, a list of Cells $C$, each $N$ references an `unordered_set` of associated cells $\{(N, c) | \forall c \in C\}$, and each $C$ references an `unordered_set` of nets $\{(C, n | \forall n \in N)\}$. The `unordered_set`'s are then converted to `vector`'s for greater performance.
