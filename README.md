@@ -2,15 +2,13 @@
 
 # Fiduccia-Mattheyses Algorithm 
 
-![](https://img.shields.io/lgtm/grade/python/github/b06901038/Fiduccia-Mattheyses?style=for-the-badge)
-
 #### How the different parts of the program interact with one another
 
 - Given a list of Nets $N$, a list of Cells $C$, each $N$ references an `unordered_set` of associated cells $\{(N, c) | \forall c \in C\}$, and each $C$ references an `unordered_set` of nets $\{(C, n | \forall n \in N)\}$. The `unordered_set`'s are then converted to `vector`'s for greater performance.
 
 - A mapping of cell indices to cell names is kept, as well as a mapping of net indices to net names.
 
-- The gains of each $c \in C$ are then initialised. This is done only on the first iteration since cell gains are updated incrementally.
+- The gains of each $c \in C$ are then initialized. This is done only on the first iteration since cell gains are updated incrementally.
 
 - All $C$'s are stored in a Bucket List $B$ initially and are moved into another Bucket List $B'$ as the loop goes on, until all cells $c \in C$ are transferred from $B$ to $B'$.
 
@@ -28,10 +26,10 @@
   
 #### Some other things to know
 
-- A naive initialisation would be to decide which side the cell is on base on the order it is extracted from input. In this case, a more sophisticated approach is used here. $N$ is sorted based on the number of cells it is connected to. $n \in N$ with ascending order is then processed in the following way.
-  - if all cells connected to $n$ is not initialised, initialise all of them to a random side $r \in \{0, 1\}$.
-  - if the net has more cells on $r$ than $\neg r$, initialise the remaining uninitialised cells to $r$.
-  - if the preferred side $r$ has too many cells already, initialise all remaining uninitialised cells to $\neg r$.
+- A naive initialization would be to decide which side the cell is on base on the order it is extracted from input. In this case, a more sophisticated approach is used here. $N$ is sorted based on the number of cells it is connected to. $n \in N$ with ascending order is then processed in the following way.
+  - if all cells connected to $n$ is not initialized, initialize all of them to a random side $r \in \{0, 1\}$.
+  - if the net has more cells on $r$ than $\neg r$, initialize the remaining uninitialized cells to $r$.
+  - if the preferred side $r$ has too many cells already, initialize all remaining uninitialized cells to $\neg r$.
   - Empirically, this approaches improves the initial solution by as much as 40%.
 
 - Since a do-first-then-revert approach is used, to minimise the number of cells flipped, $m, n$ are updated if $a_j \geq a_i$ for $j > i$. 
@@ -40,4 +38,22 @@
 
 - Assertions are littered all over the place (more than 70 counting `assert` statements alone) to prevent bugs and will (hopefully) be optimised away once `NDEBUG` is defined. Incremental update was initially developed to prevent bugs, as updating gains from scratch every iteration can hide subtle bugs.
 
+- Requires C++11 or later versions to compile.
+# B\* Tree
+
+### How different parts of the program work together?
+
+- Initially, a tree is built from the blocks available. The initial tree can be legal or illegal.
+
+- After building the tree, the tree is updated according to B\* tree's simulated annealing rule, swapping, rotating, and mirroring.
+
+- After an update, the tree is always re-legalized (to prevent overlap).
+
+- The tree is legalized by creating a contour line and cells deposit on top of that line.
+
+- The simulated annealing's temperature decays slower when it's high for more exploration, and gets lower faster when it's low to speed up convergence.
+
+#### Some other things to know  
+
+- Assertions are littered all over the place (more than 90 counting `assert` statements alone) to prevent bugs and will (hopefully) be optimised away once `NDEBUG` is defined. Incremental update was initially developed to prevent bugs, as updating gains from scratch every iteration can hide subtle bugs.
 - Requires C++11 or later versions to compile.
